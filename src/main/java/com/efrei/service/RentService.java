@@ -10,6 +10,8 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 
+import org.springframework.test.context.transaction.TransactionConfiguration;
+
 import com.efrei.domain.Vehicule;
 
 public class RentService {
@@ -25,27 +27,45 @@ public class RentService {
 	}
 	
 	
+	
 	public List<Vehicule> getVehicules(){
 		
-		List list = em.createNativeQuery("SELECT * FROM vehicule",Vehicule.class).getResultList();
+		List<Vehicule> list = em.createNativeQuery("SELECT * FROM vehicule where isrented = FALSE",Vehicule.class).getResultList();
 		
 		List<Vehicule> listVehicule = new ArrayList<Vehicule>();
 		for (Iterator<Vehicule> it = list.iterator(); it.hasNext();){
 			
-			listVehicule.add((Vehicule) it.next());
+			listVehicule.add(it.next());
 		}
 		
-		return listVehicule;
+		return list;
 	}
 	
-	public boolean rent(String plateNumber) {
-		boolean re = false;
-		//TODO 
-		List list = em.createNativeQuery("SELECT v FROM vehicule WHERE v.id = :plateNumber").setParameter("plateNumber", plateNumber).getResultList();
+	public Vehicule getCar(String plateNumber) {	
+		//boolean re = false;
+		Vehicule result = new Vehicule();
+		
+		List list1 = em.createNativeQuery("SELECT id FROM vehicule WHERE plateNumber = ?1").setParameter(1, plateNumber).getResultList();
+		
+		long id = (long) list1.iterator().next();
 	
-		for (Iterator it = list.iterator(); it.hasNext();){
-			re = true;
-			Vehicule vehicule= (Vehicule) it.next();}
-		return re;
+		
+		result = em.find(Vehicule.class, id);
+		
+		return  result;
 	}
+	
+
+	public  void rent(String plateNumber) {
+		Vehicule result = new Vehicule();
+		List list1 = em.createNativeQuery("SELECT id FROM vehicule WHERE plateNumber = ?1").setParameter(1, plateNumber).getResultList();		
+		long id = (long) list1.iterator().next();
+		result = em.find(Vehicule.class, id);
+		result.setRented(true);
+		em.refresh(result);
+		
+		
+	}
+	
+	
 }

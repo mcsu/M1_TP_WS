@@ -16,6 +16,8 @@ import com.efrei.service.RentService;
 @RestController
 
 public class RentController {
+
+	//list
 	@RequestMapping(value = "/cars", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)  
 	@ResponseBody
@@ -24,38 +26,45 @@ public class RentController {
 		return rs.getVehicules();
 	}
 	
-	@RequestMapping(value = "/test", method = RequestMethod.GET)
+	//test
+	@RequestMapping(value = "/test1", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)  
 	@ResponseBody
 	public String test(){
 		return "测试";
 	}
 	
-	/*@RequestMapping(value = "/cars/{plateNumber}", method = RequestMethod.GET)  
-	@ResponseStatus(HttpStatus.OK)  
-	@ResponseBody  
-	public Car aCar(@PathVariable("plateNumber") String plateNumber) throws Exception{  }*/
-	
-	@RequestMapping(value = "/cars/{plateNumber}", method = RequestMethod.DELETE)
-	@ResponseStatus(HttpStatus.OK)
-	public void getBack(@PathVariable("plateNumber") String plateNumber) throws Exception{  }
-	
+	//A car
 	@RequestMapping(value = "/cars/{plateNumber}", method = RequestMethod.GET)  
 	@ResponseStatus(HttpStatus.OK)
-	public void rent(@PathVariable("plateNumber") String plateNumber) throws Exception{
+	public Vehicule aCar(@PathVariable("plateNumber") String plateNumber) throws Exception{
 		RentService rs = new RentService();
-		rs.rent(plateNumber);
-			
+	
+		return rs.getCar(plateNumber);
 	}
 	
-	@RequestMapping(value = "/carst/{plateNumber}", method = RequestMethod.GET)  
+	//rent
+	 @RequestMapping(value = "/cars/{plateNumber}", method = RequestMethod.PUT)
+	 @ResponseStatus(HttpStatus.OK)
+	 public void rent(@PathVariable("plateNumber") String plateNumber) throws Exception{
+		 RentService rs = new RentService();
+		 rs.rent(plateNumber);
+	 } 
+
+	
+	//return
+	@RequestMapping(value = "/cars/{plateNumber}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public String tt(@PathVariable("plateNumber") String plateNumber) throws Exception{
-		return plateNumber;
-			
+	public void getBack(@PathVariable("plateNumber") String plateNumber) throws Exception{ 
+		RentService rs = new RentService();
+		
 	}
 	
+
+	
+
+	/*
 	@RequestMapping(value = "/voiture/{plateNumber}", method = RequestMethod.PUT)  
 	@ResponseStatus(HttpStatus.OK)
-	public void rentAndGetBack(@PathVariable("plateNumber") String plateNumber, @RequestParam(value="rent", required = true)boolean rent) throws Exception{  } 
+	public void rentAndGetBack(@PathVariable("plateNumber") String plateNumber, @RequestParam(value="rent", required = true)boolean rent) throws Exception{  }*/ 
 }
